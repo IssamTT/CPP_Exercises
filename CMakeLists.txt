@@ -3,6 +3,7 @@ project(CPP_Exercices)
 
 add_executable(translator
     src/translator.cpp
+
 )
 
 target_compile_features(translator PRIVATE cxx_std_17)
