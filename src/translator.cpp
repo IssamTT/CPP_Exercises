@@ -1,146 +1,122 @@
 
-#include <fstream>
 #include <iostream>
 #include <map>
 #include <set>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-using Dictionary = std::map<std::string, std::string>;
-using History = std::vector<std::string>;
-using Context = std::pair<Dictionary, History>;
-using Languages = std::pair<std::string, std::string>;
-using Translator = std::map<Languages, Context>;
-
 std::set<std::string> make_exit_commands()
 {
-    return {"q", "e", "exit", "quit"};
+    std::set<std::string> exit_commands;
+    exit_commands.insert("q");
+    exit_commands.insert("quit");
+    exit_commands.insert("e");
+    exit_commands.insert("exit");
+    return exit_commands;
 }
 
-bool execute_instruction(std::istream &input,
-                         Translator &translator,
-                         Languages &languages)
+std::vector<std::string> split(std::string input, char delimiter)
 {
-    const auto exit_commands = make_exit_commands();
-    auto &[dictionary, history] = translator[languages];
-
-    auto command = std::string{};
-    input >> command;
-
-    if (exit_commands.count(command) != 0)
+    std::vector<std::string> vect;
+    std::stringstream s(input);
+    std::string token;
+    while (std::getline(s, token, delimiter))
     {
-        return false;
+        vect.push_back(token);
     }
-    else if (command == "add")
-    {
-        auto key = std::string{};
-        input >> key;
-
-        auto &value = dictionary[key];
-        input >> value;
-
-        std::cout << key << " => " << value << std::endl;
-        history.push_back("add " + key + " " + value);
-    }
-    else if (command == "translate")
-    {
-        auto line = std::string{};
-        std::getline(input, line);
-
-        auto words = std::stringstream{};
-        words << line;
-
-        while (!words.eof())
-        {
-            auto key = std::string{};
-            words >> key;
-
-            const auto it = dictionary.find(key);
-            std::cout << (it == dictionary.end() ? "???" : it->second) << " ";
-        }
-
-        std::cout << std::endl;
-    }
-    else if (command == "print")
-    {
-        for (const auto &[key, value] : dictionary)
-        {
-            std::cout << key << " => " << value << std::endl;
-        }
-    }
-    else if (command == "save")
-    {
-        auto name = std::string{};
-        input >> name;
-
-        auto file = std::ofstream{name};
-        for (const auto &command : history)
-        {
-            file << command << "\n";
-        }
-    }
-    else if (command == "load")
-    {
-        auto name = std::string{};
-        input >> name;
-
-        auto file = std::ifstream{name};
-        while (!file.eof())
-        {
-            execute_instruction(file, translator, languages);
-        }
-    }
-    else if (command == "clear")
-    {
-        dictionary.clear();
-        history.clear();
-    }
-    else if (command == "remove")
-    {
-        auto word = std::string{};
-        input >> word;
-
-        for (auto it = dictionary.begin(); it != dictionary.end();)
-        {
-            if (it->first == word || it->second == word)
-            {
-                std::cout << it->first << " x " << it->second << std::endl;
-                it = dictionary.erase(it);
-            }
-            else
-            {
-                ++it;
-            }
-        }
-
-        history.push_back("remove " + word);
-    }
-    else if (command == "from")
-    {
-        std::cin >> languages.first;
-    }
-    else if (command == "to")
-    {
-        std::cin >> languages.second;
-    }
-
-    return true;
+    return vect;
 }
 
 int main(int argc, char **argv)
 {
-    auto languages = argc == 3 ? Languages{argv[1], argv[2]} : Languages{"fr", "en"};
-
-    auto translator = Translator{};
-
+    std::map<std::string, std::string> translate;
+    auto exit_value = make_exit_commands();
+    std::vector<std::pair<std::string, std::string>> history;
     while (true)
     {
+        std::string input;
+        std::stringstream stream(input);
         std::cout << "Enter a command: " << std::endl;
+        getline(std::cin, input);
+        std::vector<std::string> inputArray = split(input, ' ');
 
-        if (!execute_instruction(std::cin, translator, languages))
+        if (exit_value.count(inputArray[0]) > 0)
         {
             break;
+        }
+        if (inputArray[0].compare("add") == 0)
+        {
+            translate.emplace(inputArray[1], inputArray[2]);
+            history.push_back(std::make_pair(inputArray[1], inputArray[2]));
+            std::cout << inputArray[1] << "=>" << inputArray[2] << std::endl;
+        }
+
+        if (inputArray[0].compare("translate") == 0)
+        {
+            /*auto it = translate.find(inputArray[1]);
+            std::cout << (it->first.empty() ? "???" : it->second) << std::endl;
+            */
+            auto it = inputArray.begin() + 1;
+            for (; it != inputArray.end(); it++)
+            {
+                std::cout << (translate[*it].empty() ? "???" : translate[*it]) << std::endl;
+            }
+        }
+
+        if (inputArray[0].compare("print") == 0)
+        {
+            for (auto it = translate.begin(); it != translate.end(); it++)
+            {
+                std::cout << it->first << "=>" << it->second << std::endl;
+            }
+        }
+
+        if (inputArray[0].compare("history") == 0)
+        {
+            for (auto it = history.begin(); it != history.end(); it++)
+            {
+                std::cout << "(" << it->first << ", " << it->second << ")" << std::endl;
+            }
+        }
+
+        if (inputArray[0].compare("save") == 0)
+        {
+            if (inputArray[1].empty())
+            {
+                std::cout << "Error : \nneed file" << std::endl;
+                continue;
+            }
+            std::ofstream outfile(inputArray[1]);
+            for (auto it = history.begin(); it != history.end(); it++)
+            {
+                outfile << it->first << "," << it->second << std::endl;
+            }
+        }
+
+        if (inputArray[0].compare("load") == 0)
+        {
+            std::string line;
+            std::ifstream infile(inputArray[1]);
+            if (infile.is_open())
+            {
+                while (std::getline(infile, line))
+                {
+                    std::vector<std::string> inputArray2 = split(line, ',');
+                    translate.emplace(inputArray2[0], inputArray2[1]);
+                }
+                infile.close();
+            }
+        }
+        if (inputArray[0].compare("clear") == 0)
+        {
+            translate.clear();
+        }
+
+        if (inputArray[0].compare("remove") == 0)
+        {
+            translate.erase(inputArray[1]);
         }
 
         std::cout << std::endl;
