@@ -3,7 +3,6 @@
 class Plush
 {
 private:
-    /* data */
 public:
     Plush(int);
     int value;
