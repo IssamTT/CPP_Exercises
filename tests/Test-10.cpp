@@ -9,19 +9,19 @@
 
 TEST_CASE("10. A trainer can store Pokemons in the PC")
 {
-    auto pc    = PC {};
-    auto sacha = Trainer { "Sacha", pc };
+    auto pc = PC{};
+    auto sacha = Trainer{"Sacha", pc};
 
-    auto       bulbizarre    = std::make_unique<Pokemon>("Bulbizarre");
+    auto bulbizarre = std::make_unique<Pokemon>("Bulbizarre");
     const auto bulbizarre_id = bulbizarre->id();
     sacha.capture(std::move(bulbizarre));
-    
-    auto       carapuce    = std::make_unique<Pokemon>("Carapuce");
+
+    auto carapuce = std::make_unique<Pokemon>("Carapuce");
     const auto carapuce_id = carapuce->id();
     sacha.capture(std::move(carapuce));
-    
+
     const auto bulbizarre_idx = 0;
-    const auto carapuce_idx   = 1;
+    const auto carapuce_idx = 1;
 
     SECTION("PC is empty is no Pokemon has been stored in it")
     {

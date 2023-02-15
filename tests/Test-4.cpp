@@ -4,8 +4,8 @@
 
 TEST_CASE("4. PCs are constructed with 0 Pokemon inside")
 {
-    auto pc = PC {};
+    auto pc = PC{};
 
-    const auto& pokemons = pc.pokemons();
+    const auto &pokemons = pc.pokemons();
     REQUIRE(pokemons.empty() == true);
 }
