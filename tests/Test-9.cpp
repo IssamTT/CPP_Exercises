@@ -42,7 +42,7 @@ public:
 private:
     int make_random_int(int min, int max)
     {
-        auto distribution = std::uniform_int_distribution { min, max };
+        auto distribution = std::uniform_int_distribution{min, max};
         return distribution(_generator);
     }
 
@@ -66,18 +66,18 @@ private:
         return static_cast<TrapType>(make_random_int(0, 2));
     }
 
-    std::mt19937 _generator { std::random_device{} () };
+    std::mt19937 _generator{std::random_device{}()};
 };
 
 TEST_CASE("9a. There is a class named Board")
 {
-    [[maybe_unused]] const auto board = Board {};
+    [[maybe_unused]] const auto board = Board{};
 }
 
 TEST_CASE("9b. For each type of card, there is a limit that can be placed on the board")
 {
-    auto factory = CardFactory {};
-    auto board = Board {};
+    auto factory = CardFactory{};
+    auto board = Board{};
 
     SECTION("At most 5 monsters can be placed simultaneously")
     {
