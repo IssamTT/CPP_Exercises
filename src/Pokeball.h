@@ -1,14 +1,10 @@
 #pragma once
 #include <Pokemon.h>
 #include <vector>
-// A ball where a Pokemon sleeps.
+
 class Pokeball
 {
 public:
-    Pokeball()
-    {
-    }
-
     bool empty() const
     {
         return _pokemon == nullptr;
@@ -19,7 +15,7 @@ public:
         _pokemon = std::move(pokemon);
     }
 
-    const Pokemon &pokemon() const
+    Pokemon &pokemon()
     {
         return *_pokemon;
     }

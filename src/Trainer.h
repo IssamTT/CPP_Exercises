@@ -1,21 +1,19 @@
 #pragma once
 #include <string>
-#include <PC.h>
+#include "PC.h"
+#include "Pokeball.h"
+#include "Pokedex.h"
+#include <memory>
+#include <vector>
 #include <array>
-#include <Pokeball.h>
-#include <Pokemon.h>
-
-// A person that captures Pokemons and makes them fight.
 class Trainer
 {
 public:
-    std::string _name;
-    PC &_pc;
-    std::array<Pokeball, 6> _pokeballs;
-    Trainer(std::string name, PC &pc)
+    Trainer(const std::string &name, PC &pc)
         : _name{name}, _pc{pc}
     {
     }
+
     const std::string &name() const
     {
         return _name;
@@ -28,8 +26,11 @@ public:
 
     void capture(PokemonPtr pokemon)
     {
+        if (pokemon == nullptr)
+        {
+            return;
+        }
 
-        pokemon->set_trainer(*this);
         for (auto &pokeball : _pokeballs)
         {
             if (pokeball.empty())
@@ -38,13 +39,10 @@ public:
                 return;
             }
         }
-
-        _pc.transfer(std::move(pokemon));
-    }
-
-    void store_in_pc(int value)
-    {
     }
 
 private:
+    std::array<Pokeball, 6> _pokeballs;
+    std::string _name;
+    [[gnu::unused]] PC &_pc;
 };

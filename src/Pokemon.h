@@ -1,13 +1,14 @@
 #pragma once
-
-#include <memory>
 #include <string>
+#include <memory>
+static int next_id = 0;
 
-class Trainer;
-
-// A creature that is cute and can fight other ones.
 class Pokemon
 {
+private:
+    std::string _name;
+    int _id;
+
 public:
     Pokemon(const std::string &name)
         : _name{name}, _id{next_id++}
@@ -21,11 +22,10 @@ public:
 
     Pokemon &operator=(const Pokemon &other)
     {
-        if (this == &other)
+        if (this != &other)
         {
             _name = other._name;
         }
-
         return *this;
     }
 
@@ -38,22 +38,6 @@ public:
     {
         return _id;
     }
-
-    const Trainer *trainer() const
-    {
-        return _trainer;
-    }
-
-    void set_trainer(const Trainer &trainer)
-    {
-        _trainer = &trainer;
-    }
-
-private:
-    static inline int next_id = 0;
-    std::string _name;
-    int _id = 0;
-    const Trainer *_trainer = nullptr;
 };
 
 using PokemonPtr = std::unique_ptr<Pokemon>;
