@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.18)
 project(CPP_Exercices)
 
 add_subdirectory(extern/Catch2)
+export CPLUS_INCLUDE_PATH=/opt/homebrew/Cellar/boost/1.81.0_1:$CPLUS_INCLUDE_PATH
 
 if(MSVC)
     add_compile_options(/std:c++17 /W4 /WX)
 else()
-    add_compile_options(-std=c++17 -Wall -W -Werror -Wextra -Wfatal-errors -Wno-unused-variable)
+    add_compile_options(-std=c++17 -Wall -W -Werror -Wextra -Wfatal-errors -Wno-unused-variable -I /usr/local/include/boost -L /usr/local/lib -lboost_system -lboost_filesystem)
 endif()
 
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
