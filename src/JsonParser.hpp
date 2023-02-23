@@ -8,6 +8,7 @@
 #include "StringLeaf.hpp"
 
 #include <iostream>
+#include <optional>
 
 class JsonParser
 {
@@ -17,7 +18,7 @@ private:
     void extract_spaces();
     bool check_next_char_equals(int c, std::string_view other_possibilities = "");
 
-    boost::optional<std::string> extract_string();
+    std::optional<std::string> extract_string();
 
     std::unique_ptr<Node> parse_Node();
     std::unique_ptr<Node> parse_constant(std::string_view target);
