@@ -1,5 +1,5 @@
 #pragma once
-#include <Pokemon.h>
+#include "Pokemon.h"
 #include <vector>
 
 class Pokeball
@@ -15,9 +15,14 @@ public:
         _pokemon = std::move(pokemon);
     }
 
-    Pokemon &pokemon()
+    Pokemon &pokemon() const
     {
         return *_pokemon;
+    }
+
+    PokemonPtr steal()
+    {
+        return std::move(_pokemon);
     }
 
 private:

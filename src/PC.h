@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
-#include <Pokemon.h>
+#include "Pokemon.h"
+#include <string>
+#include "Pokedex.h"
 
 class PC
 {
@@ -18,7 +20,20 @@ public:
         }
     }
 
+    PokemonPtr steal(const std::string &name, const Trainer &trainer)
+    {
+        int counter = 0;
+        for (auto &poke : _bag)
+        {
+            if (poke->name() == name && poke->trainer() == &trainer)
+            {
+                return std::move(poke);
+            }
+            counter++;
+        }
+        return nullptr;
+    }
+
 private:
-    std::vector<PokemonPtr>
-        _bag;
+    std::vector<PokemonPtr> _bag;
 };

@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 #include <array>
+class PoKedex;
+
 class Trainer
 {
 public:
@@ -26,6 +28,7 @@ public:
 
     void capture(PokemonPtr pokemon)
     {
+        pokemon->set_trainer(*this);
         if (pokemon == nullptr)
         {
             return;
@@ -41,8 +44,39 @@ public:
         }
     }
 
+    void store_in_pc(int id)
+    {
+        if (!_pokeballs[id].empty())
+        {
+            _pc.transfer(_pokeballs[id].steal());
+        }
+    }
+
+    void fetch_from_pc(const std::string &name)
+    {
+        for (auto &pokeball : _pokeballs)
+        {
+            if (pokeball.empty())
+            {
+                auto pokemon = _pc.steal(name, *this);
+                if (pokemon != nullptr)
+                {
+                    pokeball.store(std::move(pokemon));
+                }
+
+                return;
+            }
+        }
+    }
+
+    const Pokedex &pokedex() const
+    {
+        return _pokedex;
+    }
+
 private:
     std::array<Pokeball, 6> _pokeballs;
     std::string _name;
     [[gnu::unused]] PC &_pc;
+    Pokedex _pokedex;
 };

@@ -10,12 +10,12 @@
 
 TEST_CASE("12a. A Pokedex references all the instances of a Pokemon type")
 {
-    auto pokedex = Pokedex {};
+    auto pokedex = Pokedex{};
 
     auto pikachu_1 = std::make_unique<Pokemon>("Pikachu");
     auto pikachu_2 = std::make_unique<Pokemon>("Pikachu");
     auto pikachu_3 = std::make_unique<Pokemon>("Pikachu");
-    
+
     auto bulbizarre_1 = std::make_unique<Pokemon>("Bulbizarre");
     auto bulbizarre_2 = std::make_unique<Pokemon>("Bulbizarre");
 
@@ -28,7 +28,7 @@ TEST_CASE("12a. A Pokedex references all the instances of a Pokemon type")
 
     SECTION("It returns an empty collection if there is no Pokemon")
     {
-        const auto missingnos = pokedex.find("Missigno"); 
+        const auto missingnos = pokedex.find("Missigno");
         REQUIRE(missingnos.empty() == true);
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("12a. A Pokedex references all the instances of a Pokemon type")
 
         const auto pikachu_it_1 = std::find(pikachus.begin(), pikachus.end(), pikachu_1.get());
         REQUIRE(pikachu_it_1 != pikachus.end());
-        
+
         const auto bulbizarres = pokedex.find("Bulbizarre");
         REQUIRE(bulbizarres.size() == 2);
 
@@ -50,16 +50,16 @@ TEST_CASE("12a. A Pokedex references all the instances of a Pokemon type")
 
 TEST_CASE("12b. Each trainer has their own Pokedex referencing all their captured Pokemons")
 {
-    auto pc    = PC {};
-    auto sacha = Trainer { "Sacha", pc };
+    auto pc = PC{};
+    auto sacha = Trainer{"Sacha", pc};
 
-    for (auto i = 0; i < 10; ++ i)
+    for (auto i = 0; i < 10; ++i)
     {
         sacha.capture(std::make_unique<Pokemon>("Pokemon"));
     }
 
-    const auto& pokedex = sacha.pokedex();
-    const auto& pokemons = pokedex.find("Pokemon");
+    const auto &pokedex = sacha.pokedex();
+    const auto &pokemons = pokedex.find("Pokemon");
 
     SECTION("Pokemons have been added in the Pokedex")
     {
@@ -68,7 +68,7 @@ TEST_CASE("12b. Each trainer has their own Pokedex referencing all their capture
 
     SECTION("Pokemons in Pokeballs are referenced")
     {
-        for (const auto& pokeball: sacha.pokeballs())
+        for (const auto &pokeball : sacha.pokeballs())
         {
             if (!pokeball.empty())
             {
@@ -77,14 +77,13 @@ TEST_CASE("12b. Each trainer has their own Pokedex referencing all their capture
             }
         }
     }
-    
+
     SECTION("Pokemons in PC are referenced")
     {
-        for (const auto& pokemon_in_pc: pc.pokemons())
+        for (const auto &pokemon_in_pc : pc.pokemons())
         {
             const auto it = std::find(pokemons.begin(), pokemons.end(), pokemon_in_pc.get());
             REQUIRE(it != pokemons.end());
         }
     }
 }
-
