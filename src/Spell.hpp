@@ -1,6 +1,6 @@
 #pragma once
-#include <Card.hpp>
 #include <string>
+#include "Card.hpp"
 enum class SpellType
 {
     Normal,
@@ -10,55 +10,49 @@ enum class SpellType
     Field,
 };
 
-std::string to_string(const SpellType spell)
+std::string to_string(SpellType type)
 {
-    switch (spell)
+    switch (type)
     {
     case SpellType::Normal:
         return "Normal";
-
     case SpellType::Equip:
         return "Equip";
-
     case SpellType::Continuous:
         return "Continuous";
-
     case SpellType::QuickPlay:
         return "Quick-Play";
-
     case SpellType::Field:
         return "Field";
     }
-
-    return "";
 }
 
 class Spell : public Card
 {
 private:
-    std::string _id;
-    std::string _name;
-    SpellType _spell;
+    SpellType _type;
 
 public:
-    Spell(std::string, std::string, SpellType);
-    ~Spell();
+    Spell(std::string id, std::string name, SpellType type)
+        : Card(id, CardType::Spell), _type{type}
 
-    SpellType get_spell_type()
     {
-        return _spell;
+        Card::set_name(name);
+        _symbol = u8"魔";
+    }
+
+    void set_description(const std::string description)
+    {
+        Card::set_description(description);
+    }
+
+    const SpellType &get_spell_type()
+    {
+        return _type;
+    }
+
+    const std::string &get_symbol() const
+    {
+        return _symbol;
     }
 };
-
-Spell::Spell(std::string id, std::string name, SpellType spell)
-    : Card{id, CardType::Spell},
-      _id{id},
-      _name{name},
-      _spell{spell}
-{
-    set_name(name);
-}
-
-Spell::~Spell()
-{
-}

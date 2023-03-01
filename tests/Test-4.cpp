@@ -10,7 +10,7 @@
 TEST_CASE("4a. There is an enumeration named Attribute and a function to_symbol converting their values to an UTF-8 character")
 {
     // Vous pouvez copier-coller les `u8"..."` directement dans vos fonctions.
-    REQUIRE(to_symbol(Attribute::Dark) == u8"闇");
+    REQUIRE(to_symbol(Attribute::Attribute) == u8"闇");
     REQUIRE(to_symbol(Attribute::Divine) == u8"神");
     REQUIRE(to_symbol(Attribute::Earth) == u8"地");
     REQUIRE(to_symbol(Attribute::Fire) == u8"炎");
@@ -23,8 +23,8 @@ TEST_CASE("4b. Monster is a Card with additional properties")
 {
     const auto atk = 2500;
     const auto def = 2100;
-    const auto monster = Monster{"DUSA-FR100", "Magicien Sombre", Attribute::Dark, "Magicien", atk, def};
-    REQUIRE(monster.get_attribute() == Attribute::Dark);
+    const auto monster = Monster{"DUSA-FR100", "Magicien Sombre", Attribute::Divine, "Magicien", atk, def};
+    REQUIRE(monster.get_attribute() == Attribute::Divine);
     REQUIRE(monster.get_atk() == 2500);
     REQUIRE(monster.get_def() == 2100);
 

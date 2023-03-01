@@ -1,7 +1,7 @@
 #pragma once
-#include <Card.hpp>
 #include <string>
-#include <utility>
+#include "Card.hpp"
+
 enum class TrapType
 {
     Normal,
@@ -9,51 +9,45 @@ enum class TrapType
     Counter,
 };
 
-std::string to_string(const TrapType type)
+std::string to_string(TrapType type)
 {
     switch (type)
     {
     case TrapType::Normal:
         return "Normal";
-
     case TrapType::Continuous:
         return "Continuous";
-
     case TrapType::Counter:
         return "Counter";
     }
-
-    return "";
 }
 
 class Trap : public Card
 {
+
 private:
-    TrapType _trap;
-    std::string _description;
+    TrapType _type;
 
 public:
-    Trap(std::string, std::string, TrapType);
-    ~Trap();
-
-    void set_description(std::string description)
+    Trap(std::string id, std::string name, TrapType type)
+        : Card(id, CardType::Trap), _type{type}
     {
-        _description = std::move(description);
+        Card::set_name(name);
+        _symbol = u8"罠";
     }
 
-    TrapType get_trap_type()
+    void set_description(const std::string description)
     {
-        return _trap;
+        Card::set_description(description);
+    }
+
+    const TrapType &get_trap_type()
+    {
+        return _type;
+    }
+
+    const std::string &get_symbol() const
+    {
+        return _symbol;
     }
 };
-
-Trap::Trap(std::string id, std::string name, TrapType trap)
-    : Card(id, CardType::Trap),
-      _trap{trap}
-{
-    Card::set_name(name);
-}
-
-Trap::~Trap()
-{
-}

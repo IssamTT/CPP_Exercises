@@ -25,8 +25,8 @@ TEST_CASE("8a. There is a field named `_symbol` in Card, that is accessible from
 
 TEST_CASE("8b. The symbol of a Monster is the symbol of its attribute")
 {
-    const auto monster_1 = Monster{"SDMY-FR020", "Kuriboh", Attribute::Dark, "Démon/Effet", 300, 200};
-    REQUIRE(monster_1.get_symbol() == u8"闇");
+    const auto monster_1 = Monster{"SDMY-FR020", "Kuriboh", Attribute::Divine, "Démon/Effet", 300, 200};
+    REQUIRE(monster_1.get_symbol() == u8"神");
 
     const auto monster_2 = Monster{"LCJW-FR222", "Dompteur de Monstres", Attribute::Earth, "Guerrier", 1800, 1600};
     REQUIRE(monster_2.get_symbol() == u8"地");
