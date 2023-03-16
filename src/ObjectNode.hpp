@@ -1,59 +1,39 @@
 #pragma once
 #include "Node.hpp"
+#include "NodeKind.hpp"
 
-#include <algorithm>
 #include <iostream>
 #include <map>
-#include <memory>
-#include <numeric>
 #include <string>
-#include <vector>
 class ObjectNode : public Node
 {
 private:
-    std::map<std::string, NodePtr> NodeMap;
+    std::map<std::string, NodePtr> _map;
 
 public:
-    ObjectNode()
-        : Node(NodeKind::OBJECT)
-    {}
+    ObjectNode() {}
 
-    std::string print() const
+    NodeKind    kind() { return NodeKind::OBJECT; }
+    std::string print() const override
     {
-        std::string result = "{";
-        bool        first  = true;
-        for (const auto& value : NodeMap)
+        std::string res   = "{";
+        bool        first = true;
+        for (const auto& value : _map)
         {
-            if (!first)
+            if (first)
             {
-                result += ",";
+                res += "\"" + value.first + "\"" + ":" + value.second->print();
+                first = false;
             }
-            first = false;
-            result += "\"" + value.first + "\"" + ":" + value.second->print();
+            else
+            {
+                res += ",";
+                res += "\"" + value.first + "\"" + ":" + value.second->print();
+            }
         }
-        return result + "}";
+        return res + "}";
     }
-
-    NodeKind kind() const { return NodeKind::OBJECT; }
-
     static std::unique_ptr<ObjectNode> make_ptr() { return std::make_unique<ObjectNode>(); }
-
-    int child_count() { return NodeMap.size(); }
-
-    void insert(std::string name, NodePtr ptr) { NodeMap.insert(std::make_pair(name, std::move(ptr))); }
-
-    size_t height() const
-    {
-        size_t result = 0;
-        for (auto& value : NodeMap)
-        {
-            if (value.second->height() + 1 > result)
-            {
-                result += value.second->height();
-            }
-        }
-        return result;
-    }
-
-    size_t node_count() const { return 0; }
+    int                                child_count() { return _map.size(); }
+    void insert(const std::string& val, NodePtr node) { _map.insert(std::make_pair(val, std::move(node))); }
 };

@@ -99,6 +99,8 @@
         "utility": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "__memory": "cpp",
+        "filesystem": "cpp"
     }
 }
