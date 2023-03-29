@@ -7,4 +7,6 @@ struct Unit
 {
     // The name of the unit.
     std::string name;
+
+    bool operator<(const Unit& other) { return name < other.name; };
 };
