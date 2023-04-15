@@ -1,8 +1,9 @@
 #include <iostream>
 
-#if false
+#if true
 int main()
 {
+    f2<true>();
     // In the following, we ask whether some line compiles.
     // We mean, if we put it here.
 }
@@ -19,10 +20,11 @@ void f1(bool b)
     else
     {
         MyClass<false> my_class {};
-        std::cout << my_class.hello() << std::endl:
-        // Note that class MyClass<b> has no hello() method;
+        // std::cout << my_class.hello() << std::endl:
+        //  Note that class MyClass<b> has no hello() method;
     }
 }
+
 // Q1:
 //  - Does line `f1(true)` compiles ?
 //  - Does line `f1(false)` compiles ?
