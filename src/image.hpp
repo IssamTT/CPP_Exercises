@@ -10,51 +10,51 @@
 #include <stdint.h>
 #include <string>
 
-template <typename P, size_t W, size_t H>
+template <typename T, size_t W, size_t H>
 struct Image
 {
-private:
-    std::array<std::array<P, W>, H> _array;
-
 public:
-    Image(const P& pix)
+    Image(const T& pixel)
     {
-        for (size_t j = 0; j < H; j++)
+        for (size_t j = 0; j < H; ++j)
         {
-            for (size_t i = 0; i < W; i++)
+            for (size_t i = 0; i < W; ++i)
             {
-                _array[i][j] = pix;
+                array[j][i] = pixel;
             }
         }
     }
+
+    Image(const std::function<T(const size_t i, const size_t j)>& functor)
+    {
+        for (size_t j = 0; j < H; ++j)
+        {
+            for (size_t i = 0; i < W; ++i)
+            {
+                (*this)(i, j) = functor(i, j);
+            }
+        }
+    }
+
     Image() = default;
 
-    P&       operator()(const size_t i, const size_t j) { return _array[j][i]; }
-    const P& operator()(const size_t i, const size_t j) const { return _array[j][i]; }
+    T&       operator()(const size_t i, const size_t j) { return array[j][i]; }
+    const T& operator()(const size_t i, const size_t j) const { return array[j][i]; }
 
-    Image<P, W, H>(const std::function<P(const size_t i, const size_t j)>& functor)
-    {
-        for (size_t i = 0; i < H; i++)
-        {
-            for (size_t j = 0; j < W; j++)
-            {
-                (*this)(j, i) = functor(j, i);
-            }
-        }
-    }
+private:
+    std::array<std::array<T, W>, H> array;
 };
 
-template <typename A, typename B, size_t W, size_t H>
-
-Image<A, W, H>& operator+(const Image<A, W, H>& image1, const Image<B, W, H>& image2)
+template <typename T, typename P, size_t W, size_t H>
+Image<T, W, H>& operator+(const Image<T, W, H>& image1, const Image<P, W, H>& image2)
 {
-    Image<A, W, H> result = Image<A, W, H> {};
-    for (size_t i = 0; i < H; i++)
+    Image<T, W, H> res = {};
+    for (size_t x = 0; x < W; x++)
     {
-        for (size_t j = 0; j < W; j++)
+        for (size_t y = 0; y < H; y++)
         {
-            result(j, i) = image1(j, i) + image2(j, i);
+            res(y, x) = image1(y, x) + image2(y, x);
         }
     }
-    return result;
+    return res;
 }
